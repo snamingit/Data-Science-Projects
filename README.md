@@ -3,6 +3,7 @@
 This repository includes the following data science projects:
 
 1. Predicting Age-Related Conditions
+   
    Goal: To predict whether the variable 'Class' will have a value of:
       1 :  a person will have any age-related diseases or
       0:  a person will NOT have any age-related diseases
