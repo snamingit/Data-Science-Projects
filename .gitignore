@@ -2,3 +2,6 @@
 .env
 venc/
 .envrc
+
+#ignore API
+config.py
