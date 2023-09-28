@@ -14,3 +14,7 @@ This repository includes the following data science projects:
     Models Considered: Logistic Regression, SVM, KNN, Random Forest, CatBoost, XGBoost, LightGBM, TabPFN
 
     Best Model: TabPFN (based on balanced log-loss score)
+
+
+2. Forecasting GDP - An End-to-End Project
+   -- Work-in-progress
