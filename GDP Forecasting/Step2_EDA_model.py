@@ -28,8 +28,9 @@ from keras.layers.convolutional import Conv1D
 from keras.layers.convolutional import MaxPooling1D
 from keras.layers import Dropout
 
-directory= os.chdir(open('filepath.txt').readline())
+
 
 #load dataset
-df = pd.read_csv(data.csv)
+filepath= open('filepath.txt').readline()
+df = pd.read_csv(filepath)
 df
