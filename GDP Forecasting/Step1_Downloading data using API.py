@@ -1,11 +1,10 @@
 import os
 import fredapi as fa
 import pandas as pd
-from config import fred as settings
-fred = fa.Fred(settings['api_key'])
+from config import fred
+fred = fa.Fred(fred['api_key'])
 import datetime
 from datetime import timedelta
-
 
 q_series = [('gdp','GDP')] 
 m_series = [('capacity_manuf','MCUMFN'),('cpi','CPIAUCSL'),('unemp','UNRATE'),('leadin_ind','USALOLITONOSTSAM')]
@@ -30,7 +29,6 @@ date_df = pd.DataFrame(date_df)
 date_df.sort_values(by='Start')
 
 #Get all the quarterly series
-from datetime import timedelta
 q_df =[]
 
 for varname, var in q_series:

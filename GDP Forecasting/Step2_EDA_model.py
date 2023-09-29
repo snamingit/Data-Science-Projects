@@ -1,4 +1,4 @@
-
+import os
 import sys 
 import numpy as np # linear algebra
 from scipy.stats import randint
@@ -27,3 +27,9 @@ from keras.layers import LSTM
 from keras.layers.convolutional import Conv1D
 from keras.layers.convolutional import MaxPooling1D
 from keras.layers import Dropout
+
+directory= os.chdir(open('filepath.txt').readline())
+
+#load dataset
+df = pd.read_csv(data.csv)
+df
