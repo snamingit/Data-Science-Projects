@@ -31,6 +31,15 @@ from keras.layers import Dropout
 
 
 #load dataset
-filepath= open('filepath.txt').readline()
-df = pd.read_csv(filepath)
-df
+#filepath= open('filepath.txt').readline()
+#df = pd.read_csv(filepath)
+df = pd.read_csv('C:/Users/shery/My Drive/Data-Science-Projects/Mortgage Rate Forecasting/data.csv')
+df.head()
+
+#pre-processing
+df.info()
+df.dtypes
+df.describe()
+
+## finding all columns that have nan:
+
