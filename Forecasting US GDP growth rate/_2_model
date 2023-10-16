@@ -1,0 +1,370 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "isInteractiveWindowMessageCell": true
+   },
+   "source": [
+    "Connected to myenv (Python 3.9.18)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import datetime\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "from midas.midas.mix import mix_freq, mix_freq2\n",
+    "from midas.midas.adl import estimate, forecast, midas_adl, rmse, estimate2,forecast2, midas_adl2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df= pd.read_csv('data.csv', parse_dates=['date'], index_col='date')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>lei</th>\n",
+       "      <th>ip</th>\n",
+       "      <th>gdp</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>date</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>1919-01-31</th>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1919-02-28</th>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1919-03-31</th>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1919-04-30</th>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1919-05-31</th>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "            lei  ip  gdp\n",
+       "date                    \n",
+       "1919-01-31  NaN NaN  NaN\n",
+       "1919-02-28  NaN NaN  NaN\n",
+       "1919-03-31  NaN NaN  NaN\n",
+       "1919-04-30  NaN NaN  NaN\n",
+       "1919-05-31  NaN NaN  NaN"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "c:\\Users\\shery\\Documents\\Data-Science-Projects\\Forecasting US GDP growth rate\\midas\\midas\\mix.py:119: FutureWarning: Passing method to DatetimeIndex.get_loc is deprecated and will raise in a future version. Use index.get_indexer([item], method=...) instead.\n",
+      "  start_hf1 = hf_data1.index.get_loc(lfdate, method='bfill')  # @todo Find a more efficient way\n",
+      "c:\\Users\\shery\\Documents\\Data-Science-Projects\\Forecasting US GDP growth rate\\midas\\midas\\mix.py:120: FutureWarning: Passing method to DatetimeIndex.get_loc is deprecated and will raise in a future version. Use index.get_indexer([item], method=...) instead.\n",
+      "  start_hf2 = hf_data2.index.get_loc(lfdate, method='bfill')\n"
+     ]
+    }
+   ],
+   "source": [
+    "y, yl, x1, x2, yf, ylf, x1f, x2f =mix_freq2(df.gdp, df.ip,df.lei, \"3m\",\"3m\", 1, 2,\n",
+    "                                 start_date=datetime.datetime(2021,3,31),\n",
+    "                                 end_date=datetime.datetime(2013,3,31))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Series([], Name: gdp, dtype: float64)"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "y.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Series([], Name: gdp, dtype: float64)\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(y)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Empty DataFrame\n",
+      "Columns: [gdp]\n",
+      "Index: []\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(yl)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Empty DataFrame\n",
+      "Columns: [0, 1, 2]\n",
+      "Index: []\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(x1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "c:\\Users\\shery\\Documents\\Data-Science-Projects\\Forecasting US GDP growth rate\\midas\\midas\\adl.py:85: FutureWarning: `rcond` parameter will change to the default of machine precision times ``max(M, N)`` where M and N are the input matrix dimensions.\n",
+      "To use the future default and silence this warning we advise to pass `rcond=None`, to keep using the old, explicitly pass `rcond=-1`.\n",
+      "  c = np.linalg.lstsq(np.concatenate([np.ones((len(xw1), 1)), xw1.reshape((len(xw1), 1)), xw2.reshape((len(xw2), 1)), yl], axis=1), y)[0]\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "array([ 0.,  0.,  0., -1.,  0., -1.,  0.,  0.])"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "res = estimate2(y, yl, x1, x2, poly1='expalmon', poly2='expalmon')\n",
+    "res.x"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "ValueError",
+     "evalue": "operands could not be broadcast together with shapes (31,) (126,) (31,) ",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mValueError\u001b[0m                                Traceback (most recent call last)",
+      "\u001b[1;32mc:\\Users\\shery\\Documents\\Data-Science-Projects\\Forecasting US GDP growth rate\\_2_model\u001b[0m in \u001b[0;36mline 1\n\u001b[1;32m----> <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=19'>20</a>\u001b[0m fc \u001b[39m=\u001b[39m forecast2(x1f, x2f, ylf, res, poly1\u001b[39m=\u001b[39;49m\u001b[39m'\u001b[39;49m\u001b[39mexpalmon\u001b[39;49m\u001b[39m'\u001b[39;49m,poly2\u001b[39m=\u001b[39;49m\u001b[39m'\u001b[39;49m\u001b[39mexpalmon\u001b[39;49m\u001b[39m'\u001b[39;49m)\n\u001b[0;32m      <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=20'>21</a>\u001b[0m forecast_df \u001b[39m=\u001b[39m fc\u001b[39m.\u001b[39mjoin(yf)\n\u001b[0;32m      <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=21'>22</a>\u001b[0m forecast_df[\u001b[39m'\u001b[39m\u001b[39mgap\u001b[39m\u001b[39m'\u001b[39m] \u001b[39m=\u001b[39m forecast_df\u001b[39m.\u001b[39myfh \u001b[39m-\u001b[39m forecast_df\u001b[39m.\u001b[39mgdp\n",
+      "File \u001b[1;32mc:\\Users\\shery\\Documents\\Data-Science-Projects\\Forecasting US GDP growth rate\\midas\\midas\\adl.py:153\u001b[0m, in \u001b[0;36mforecast2\u001b[1;34m(xfc1, xfc2, yfcl, res, poly1, poly2)\u001b[0m\n\u001b[0;32m    <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=150'>151</a>\u001b[0m yf \u001b[39m=\u001b[39m a \u001b[39m+\u001b[39m b1 \u001b[39m*\u001b[39m xw1 \u001b[39m+\u001b[39mb2 \u001b[39m*\u001b[39m xw2\n\u001b[0;32m    <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=151'>152</a>\u001b[0m \u001b[39mfor\u001b[39;00m i \u001b[39min\u001b[39;00m \u001b[39mrange\u001b[39m(\u001b[39mlen\u001b[39m(l)):\n\u001b[1;32m--> <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=152'>153</a>\u001b[0m     yf\u001b[39m+\u001b[39m\u001b[39m=\u001b[39ml[i]\u001b[39m*\u001b[39myfcl\u001b[39m.\u001b[39mvalues[:, i]\n\u001b[0;32m    <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=154'>155</a>\u001b[0m \u001b[39mreturn\u001b[39;00m pd\u001b[39m.\u001b[39mDataFrame(yf, index\u001b[39m=\u001b[39mxfc1\u001b[39m.\u001b[39mindex, columns\u001b[39m=\u001b[39m[\u001b[39m'\u001b[39m\u001b[39myfh\u001b[39m\u001b[39m'\u001b[39m])\n",
+      "\u001b[1;31mValueError\u001b[0m: operands could not be broadcast together with shapes (31,) (126,) (31,) "
+     ]
+    }
+   ],
+   "source": [
+    "fc = forecast2(x1f, x2f, ylf, res, poly1='expalmon',poly2='expalmon')\n",
+    "forecast_df = fc.join(yf)\n",
+    "forecast_df['gap'] = forecast_df.yfh - forecast_df.gdp\n",
+    "forecast_df"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "c:\\Users\\shery\\Documents\\Data-Science-Projects\\Forecasting US GDP growth rate\\midas\\midas\\mix.py:119: FutureWarning: Passing method to DatetimeIndex.get_loc is deprecated and will raise in a future version. Use index.get_indexer([item], method=...) instead.\n",
+      "  start_hf1 = hf_data1.index.get_loc(lfdate, method='bfill')  # @todo Find a more efficient way\n",
+      "c:\\Users\\shery\\Documents\\Data-Science-Projects\\Forecasting US GDP growth rate\\midas\\midas\\mix.py:120: FutureWarning: Passing method to DatetimeIndex.get_loc is deprecated and will raise in a future version. Use index.get_indexer([item], method=...) instead.\n",
+      "  start_hf2 = hf_data2.index.get_loc(lfdate, method='bfill')\n",
+      "c:\\Users\\shery\\Documents\\Data-Science-Projects\\Forecasting US GDP growth rate\\midas\\midas\\adl.py:85: FutureWarning: `rcond` parameter will change to the default of machine precision times ``max(M, N)`` where M and N are the input matrix dimensions.\n",
+      "To use the future default and silence this warning we advise to pass `rcond=None`, to keep using the old, explicitly pass `rcond=-1`.\n",
+      "  c = np.linalg.lstsq(np.concatenate([np.ones((len(xw1), 1)), xw1.reshape((len(xw1), 1)), xw2.reshape((len(xw2), 1)), yl], axis=1), y)[0]\n"
+     ]
+    },
+    {
+     "ename": "LinAlgError",
+     "evalue": "SVD did not converge in Linear Least Squares",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mLinAlgError\u001b[0m                               Traceback (most recent call last)",
+      "\u001b[1;32mc:\\Users\\shery\\Documents\\Data-Science-Projects\\Forecasting US GDP growth rate\\_2_model\u001b[0m in \u001b[0;36mline 5\n\u001b[0;32m      <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=11'>12</a>\u001b[0m y, yl, x1, x2, yf, ylf, x1f, x2f \u001b[39m=\u001b[39mmix_freq2(df\u001b[39m.\u001b[39mgdp, df\u001b[39m.\u001b[39mip,df\u001b[39m.\u001b[39mlei, \u001b[39m\"\u001b[39m\u001b[39m3m\u001b[39m\u001b[39m\"\u001b[39m,\u001b[39m\"\u001b[39m\u001b[39m3m\u001b[39m\u001b[39m\"\u001b[39m, \u001b[39m1\u001b[39m, \u001b[39m2\u001b[39m,\n\u001b[0;32m      <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=12'>13</a>\u001b[0m                                  start_date\u001b[39m=\u001b[39mdatetime\u001b[39m.\u001b[39mdatetime(\u001b[39m2011\u001b[39m,\u001b[39m3\u001b[39m,\u001b[39m31\u001b[39m),\n\u001b[0;32m      <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=13'>14</a>\u001b[0m                                  end_date\u001b[39m=\u001b[39mdatetime\u001b[39m.\u001b[39mdatetime(\u001b[39m2013\u001b[39m,\u001b[39m3\u001b[39m,\u001b[39m31\u001b[39m))\n\u001b[1;32m----> <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=15'>16</a>\u001b[0m res \u001b[39m=\u001b[39m estimate2(y, yl, x1, x2, poly1\u001b[39m=\u001b[39;49m\u001b[39m'\u001b[39;49m\u001b[39mexpalmon\u001b[39;49m\u001b[39m'\u001b[39;49m, poly2\u001b[39m=\u001b[39;49m\u001b[39m'\u001b[39;49m\u001b[39mexpalmon\u001b[39;49m\u001b[39m'\u001b[39;49m)\n\u001b[0;32m      <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=16'>17</a>\u001b[0m res\u001b[39m.\u001b[39mx\n\u001b[0;32m      <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=17'>18</a>\u001b[0m fc \u001b[39m=\u001b[39m forecast2(x1f, x2f, ylf, res, poly1\u001b[39m=\u001b[39m\u001b[39m'\u001b[39m\u001b[39mexpalmon\u001b[39m\u001b[39m'\u001b[39m,poly2\u001b[39m=\u001b[39m\u001b[39m'\u001b[39m\u001b[39mexpalmon\u001b[39m\u001b[39m'\u001b[39m)\n",
+      "File \u001b[1;32mc:\\Users\\shery\\Documents\\Data-Science-Projects\\Forecasting US GDP growth rate\\midas\\midas\\adl.py:85\u001b[0m, in \u001b[0;36mestimate2\u001b[1;34m(y, yl, x1, x2, poly1, poly2)\u001b[0m\n\u001b[0;32m     <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=81'>82</a>\u001b[0m \u001b[39m# First we do OLS to get initial parameters\u001b[39;00m\n\u001b[0;32m     <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=82'>83</a>\u001b[0m \u001b[39m# Note: modified to allow for ylag=0\u001b[39;00m\n\u001b[0;32m     <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=83'>84</a>\u001b[0m \u001b[39mif\u001b[39;00m yl \u001b[39mis\u001b[39;00m \u001b[39mnot\u001b[39;00m \u001b[39mNone\u001b[39;00m:\n\u001b[1;32m---> <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=84'>85</a>\u001b[0m     c \u001b[39m=\u001b[39m np\u001b[39m.\u001b[39;49mlinalg\u001b[39m.\u001b[39;49mlstsq(np\u001b[39m.\u001b[39;49mconcatenate([np\u001b[39m.\u001b[39;49mones((\u001b[39mlen\u001b[39;49m(xw1), \u001b[39m1\u001b[39;49m)), xw1\u001b[39m.\u001b[39;49mreshape((\u001b[39mlen\u001b[39;49m(xw1), \u001b[39m1\u001b[39;49m)), xw2\u001b[39m.\u001b[39;49mreshape((\u001b[39mlen\u001b[39;49m(xw2), \u001b[39m1\u001b[39;49m)), yl], axis\u001b[39m=\u001b[39;49m\u001b[39m1\u001b[39;49m), y)[\u001b[39m0\u001b[39m]\n\u001b[0;32m     <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=85'>86</a>\u001b[0m     \u001b[39m#beta0,beta1,beta2,lambda\u001b[39;00m\n\u001b[0;32m     <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=87'>88</a>\u001b[0m     f \u001b[39m=\u001b[39m \u001b[39mlambda\u001b[39;00m v: ssr2(v, x1\u001b[39m.\u001b[39mvalues, x2\u001b[39m.\u001b[39mvalues, y\u001b[39m.\u001b[39mvalues, yl\u001b[39m.\u001b[39mvalues, weight_method1, weight_method2)\n",
+      "File \u001b[1;32mc:\\Users\\shery\\.conda\\envs\\myenv\\lib\\site-packages\\numpy\\linalg\\linalg.py:2326\u001b[0m, in \u001b[0;36mlstsq\u001b[1;34m(a, b, rcond)\u001b[0m\n\u001b[0;32m   <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=2322'>2323</a>\u001b[0m \u001b[39mif\u001b[39;00m n_rhs \u001b[39m==\u001b[39m \u001b[39m0\u001b[39m:\n\u001b[0;32m   <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=2323'>2324</a>\u001b[0m     \u001b[39m# lapack can't handle n_rhs = 0 - so allocate the array one larger in that axis\u001b[39;00m\n\u001b[0;32m   <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=2324'>2325</a>\u001b[0m     b \u001b[39m=\u001b[39m zeros(b\u001b[39m.\u001b[39mshape[:\u001b[39m-\u001b[39m\u001b[39m2\u001b[39m] \u001b[39m+\u001b[39m (m, n_rhs \u001b[39m+\u001b[39m \u001b[39m1\u001b[39m), dtype\u001b[39m=\u001b[39mb\u001b[39m.\u001b[39mdtype)\n\u001b[1;32m-> <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=2325'>2326</a>\u001b[0m x, resids, rank, s \u001b[39m=\u001b[39m gufunc(a, b, rcond, signature\u001b[39m=\u001b[39;49msignature, extobj\u001b[39m=\u001b[39;49mextobj)\n\u001b[0;32m   <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=2326'>2327</a>\u001b[0m \u001b[39mif\u001b[39;00m m \u001b[39m==\u001b[39m \u001b[39m0\u001b[39m:\n\u001b[0;32m   <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=2327'>2328</a>\u001b[0m     x[\u001b[39m.\u001b[39m\u001b[39m.\u001b[39m\u001b[39m.\u001b[39m] \u001b[39m=\u001b[39m \u001b[39m0\u001b[39m\n",
+      "File \u001b[1;32mc:\\Users\\shery\\.conda\\envs\\myenv\\lib\\site-packages\\numpy\\linalg\\linalg.py:124\u001b[0m, in \u001b[0;36m_raise_linalgerror_lstsq\u001b[1;34m(err, flag)\u001b[0m\n\u001b[0;32m    <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=122'>123</a>\u001b[0m \u001b[39mdef\u001b[39;00m \u001b[39m_raise_linalgerror_lstsq\u001b[39m(err, flag):\n\u001b[1;32m--> <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=123'>124</a>\u001b[0m     \u001b[39mraise\u001b[39;00m LinAlgError(\u001b[39m\"\u001b[39m\u001b[39mSVD did not converge in Linear Least Squares\u001b[39m\u001b[39m\"\u001b[39m)\n",
+      "\u001b[1;31mLinAlgError\u001b[0m: SVD did not converge in Linear Least Squares"
+     ]
+    }
+   ],
+   "source": [
+    "y, yl, x1, x2, yf, ylf, x1f, x2f =mix_freq2(df.gdp, df.ip,df.lei, \"3m\",\"3m\", 1, 2,\n",
+    "                                 start_date=datetime.datetime(2011,3,31),\n",
+    "                                 end_date=datetime.datetime(2013,3,31))\n",
+    "\n",
+    "res = estimate2(y, yl, x1, x2, poly1='expalmon', poly2='expalmon')\n",
+    "res.x\n",
+    "fc = forecast2(x1f, x2f, ylf, res, poly1='expalmon',poly2='expalmon')\n",
+    "forecast_df = fc.join(yf)\n",
+    "forecast_df['gap'] = forecast_df.yfh - forecast_df.gdp\n",
+    "forecast_df"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "LinAlgError",
+     "evalue": "SVD did not converge in Linear Least Squares",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mLinAlgError\u001b[0m                               Traceback (most recent call last)",
+      "\u001b[1;32mc:\\Users\\shery\\Documents\\Data-Science-Projects\\Forecasting US GDP growth rate\\_2_model\u001b[0m in \u001b[0;36mline 5\n\u001b[0;32m      <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=10'>11</a>\u001b[0m y, yl, x1, x2, yf, ylf, x1f, x2f \u001b[39m=\u001b[39mmix_freq2(df\u001b[39m.\u001b[39mgdp, df\u001b[39m.\u001b[39mip,df\u001b[39m.\u001b[39mlei, \u001b[39m\"\u001b[39m\u001b[39m3m\u001b[39m\u001b[39m\"\u001b[39m,\u001b[39m\"\u001b[39m\u001b[39m3m\u001b[39m\u001b[39m\"\u001b[39m, \u001b[39m1\u001b[39m, \u001b[39m2\u001b[39m,\n\u001b[0;32m      <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=11'>12</a>\u001b[0m                                  start_date\u001b[39m=\u001b[39mdatetime\u001b[39m.\u001b[39mdatetime(\u001b[39m1961\u001b[39m,\u001b[39m3\u001b[39m,\u001b[39m31\u001b[39m),\n\u001b[0;32m      <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=12'>13</a>\u001b[0m                                  end_date\u001b[39m=\u001b[39mdatetime\u001b[39m.\u001b[39mdatetime(\u001b[39m2013\u001b[39m,\u001b[39m3\u001b[39m,\u001b[39m31\u001b[39m))\n\u001b[1;32m----> <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=14'>15</a>\u001b[0m res \u001b[39m=\u001b[39m estimate2(y, yl, x1, x2, poly1\u001b[39m=\u001b[39;49m\u001b[39m'\u001b[39;49m\u001b[39mexpalmon\u001b[39;49m\u001b[39m'\u001b[39;49m, poly2\u001b[39m=\u001b[39;49m\u001b[39m'\u001b[39;49m\u001b[39mexpalmon\u001b[39;49m\u001b[39m'\u001b[39;49m)\n\u001b[0;32m      <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=15'>16</a>\u001b[0m res\u001b[39m.\u001b[39mx\n\u001b[0;32m      <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/_2_model?line=16'>17</a>\u001b[0m fc \u001b[39m=\u001b[39m forecast2(x1f, x2f, ylf, res, poly1\u001b[39m=\u001b[39m\u001b[39m'\u001b[39m\u001b[39mexpalmon\u001b[39m\u001b[39m'\u001b[39m,poly2\u001b[39m=\u001b[39m\u001b[39m'\u001b[39m\u001b[39mexpalmon\u001b[39m\u001b[39m'\u001b[39m)\n",
+      "File \u001b[1;32mc:\\Users\\shery\\Documents\\Data-Science-Projects\\Forecasting US GDP growth rate\\midas\\midas\\adl.py:85\u001b[0m, in \u001b[0;36mestimate2\u001b[1;34m(y, yl, x1, x2, poly1, poly2)\u001b[0m\n\u001b[0;32m     <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=81'>82</a>\u001b[0m \u001b[39m# First we do OLS to get initial parameters\u001b[39;00m\n\u001b[0;32m     <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=82'>83</a>\u001b[0m \u001b[39m# Note: modified to allow for ylag=0\u001b[39;00m\n\u001b[0;32m     <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=83'>84</a>\u001b[0m \u001b[39mif\u001b[39;00m yl \u001b[39mis\u001b[39;00m \u001b[39mnot\u001b[39;00m \u001b[39mNone\u001b[39;00m:\n\u001b[1;32m---> <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=84'>85</a>\u001b[0m     c \u001b[39m=\u001b[39m np\u001b[39m.\u001b[39;49mlinalg\u001b[39m.\u001b[39;49mlstsq(np\u001b[39m.\u001b[39;49mconcatenate([np\u001b[39m.\u001b[39;49mones((\u001b[39mlen\u001b[39;49m(xw1), \u001b[39m1\u001b[39;49m)), xw1\u001b[39m.\u001b[39;49mreshape((\u001b[39mlen\u001b[39;49m(xw1), \u001b[39m1\u001b[39;49m)), xw2\u001b[39m.\u001b[39;49mreshape((\u001b[39mlen\u001b[39;49m(xw2), \u001b[39m1\u001b[39;49m)), yl], axis\u001b[39m=\u001b[39;49m\u001b[39m1\u001b[39;49m), y)[\u001b[39m0\u001b[39m]\n\u001b[0;32m     <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=85'>86</a>\u001b[0m     \u001b[39m#beta0,beta1,beta2,lambda\u001b[39;00m\n\u001b[0;32m     <a href='file:///c%3A/Users/shery/Documents/Data-Science-Projects/Forecasting%20US%20GDP%20growth%20rate/midas/midas/adl.py?line=87'>88</a>\u001b[0m     f \u001b[39m=\u001b[39m \u001b[39mlambda\u001b[39;00m v: ssr2(v, x1\u001b[39m.\u001b[39mvalues, x2\u001b[39m.\u001b[39mvalues, y\u001b[39m.\u001b[39mvalues, yl\u001b[39m.\u001b[39mvalues, weight_method1, weight_method2)\n",
+      "File \u001b[1;32mc:\\Users\\shery\\.conda\\envs\\myenv\\lib\\site-packages\\numpy\\linalg\\linalg.py:2326\u001b[0m, in \u001b[0;36mlstsq\u001b[1;34m(a, b, rcond)\u001b[0m\n\u001b[0;32m   <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=2322'>2323</a>\u001b[0m \u001b[39mif\u001b[39;00m n_rhs \u001b[39m==\u001b[39m \u001b[39m0\u001b[39m:\n\u001b[0;32m   <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=2323'>2324</a>\u001b[0m     \u001b[39m# lapack can't handle n_rhs = 0 - so allocate the array one larger in that axis\u001b[39;00m\n\u001b[0;32m   <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=2324'>2325</a>\u001b[0m     b \u001b[39m=\u001b[39m zeros(b\u001b[39m.\u001b[39mshape[:\u001b[39m-\u001b[39m\u001b[39m2\u001b[39m] \u001b[39m+\u001b[39m (m, n_rhs \u001b[39m+\u001b[39m \u001b[39m1\u001b[39m), dtype\u001b[39m=\u001b[39mb\u001b[39m.\u001b[39mdtype)\n\u001b[1;32m-> <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=2325'>2326</a>\u001b[0m x, resids, rank, s \u001b[39m=\u001b[39m gufunc(a, b, rcond, signature\u001b[39m=\u001b[39;49msignature, extobj\u001b[39m=\u001b[39;49mextobj)\n\u001b[0;32m   <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=2326'>2327</a>\u001b[0m \u001b[39mif\u001b[39;00m m \u001b[39m==\u001b[39m \u001b[39m0\u001b[39m:\n\u001b[0;32m   <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=2327'>2328</a>\u001b[0m     x[\u001b[39m.\u001b[39m\u001b[39m.\u001b[39m\u001b[39m.\u001b[39m] \u001b[39m=\u001b[39m \u001b[39m0\u001b[39m\n",
+      "File \u001b[1;32mc:\\Users\\shery\\.conda\\envs\\myenv\\lib\\site-packages\\numpy\\linalg\\linalg.py:124\u001b[0m, in \u001b[0;36m_raise_linalgerror_lstsq\u001b[1;34m(err, flag)\u001b[0m\n\u001b[0;32m    <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=122'>123</a>\u001b[0m \u001b[39mdef\u001b[39;00m \u001b[39m_raise_linalgerror_lstsq\u001b[39m(err, flag):\n\u001b[1;32m--> <a href='file:///c%3A/Users/shery/.conda/envs/myenv/lib/site-packages/numpy/linalg/linalg.py?line=123'>124</a>\u001b[0m     \u001b[39mraise\u001b[39;00m LinAlgError(\u001b[39m\"\u001b[39m\u001b[39mSVD did not converge in Linear Least Squares\u001b[39m\u001b[39m\"\u001b[39m)\n",
+      "\u001b[1;31mLinAlgError\u001b[0m: SVD did not converge in Linear Least Squares"
+     ]
+    }
+   ],
+   "source": [
+    "y, yl, x1, x2, yf, ylf, x1f, x2f =mix_freq2(df.gdp, df.ip,df.lei, \"3m\",\"3m\", 1, 2,\n",
+    "                                 start_date=datetime.datetime(1961,3,31),\n",
+    "                                 end_date=datetime.datetime(2013,3,31))\n",
+    "\n",
+    "res = estimate2(y, yl, x1, x2, poly1='expalmon', poly2='expalmon')\n",
+    "res.x\n",
+    "fc = forecast2(x1f, x2f, ylf, res, poly1='expalmon',poly2='expalmon')\n",
+    "forecast_df = fc.join(yf)\n",
+    "forecast_df['gap'] = forecast_df.yfh - forecast_df.gdp\n",
+    "forecast_df"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "myenv",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "name": "python",
+   "version": "3.9.18"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
